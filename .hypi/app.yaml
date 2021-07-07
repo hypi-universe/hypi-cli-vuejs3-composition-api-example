@@ -1,0 +1,13 @@
+website: vuesjs.com
+name: vuejs
+label: vuejs
+releases:
+  - name: latest
+    schema:
+      types: schema.graphql
+    status: PUBLISHED
+    notes: latest version
+    hypi:
+      id: 01F9GZDKNV9SVX05V78DSSMHMB
+hypi:
+  id: 01F9GZDKNSR6AG2681Y2VJBVP3

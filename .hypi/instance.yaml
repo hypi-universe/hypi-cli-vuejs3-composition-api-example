@@ -1,0 +1,7 @@
+domain: hubcaps.apps.hypi.app
+release:
+  name: latest
+  hypi:
+    id: 01F9GZDKNV9SVX05V78DSSMHMB
+hypi:
+  id: 01F9GZDQ22FPCFZ2G4SA3BQP6M
