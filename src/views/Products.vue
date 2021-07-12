@@ -7,10 +7,10 @@
         >
       </div>
     </div>
-    <div v-if="loading > 0">
+    <div v-if="loading">
       <div class="alert alert-info" role="alert">Loading...</div>
     </div>
-     <div v-if="error">
+    <div v-if="error">
       <div class="alert alert-info" role="alert">{error}</div>
     </div>
     <table v-else class="table table-hover">
@@ -41,7 +41,11 @@
           <td>
             <button
               class="btn btn-danger btn-sm"
-              @click.prevent="removeProduct(product.node.hypi.id)"
+              @click.prevent="
+                deleteProduct({
+                  arcql: `hypi.id = '${product.node.hypi.id}'`,
+                })
+              "
             >
               Remove
             </button>
@@ -53,17 +57,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useResult } from '@vue/apollo-composable';
-import { useProductsQuery } from '../generated/graphql';
+import { defineComponent, ref } from "vue";
+import { useResult } from "@vue/apollo-composable";
+import { useRouter, useRoute } from "vue-router";
+
+import { useProductsQuery, useDeleteMutation } from "../generated/graphql";
 export default defineComponent({
   setup() {
+    let products = ref();
+    const router = useRouter();
+    const route = useRoute();
+
     const { result, loading, error } = useProductsQuery({
-      arcql: '*',
+      arcql: "*",
     });
-    // Only select the property 'accounts' for use in the template
-    const products = useResult(result, null, (data) => data?.find.edges);
-    return { products, loading, error };
+    const {
+      mutate: deleteProduct,
+      loading: d_loading,
+      error: d_error,
+      onDone,
+    } = useDeleteMutation({
+      variables: {
+        arcql: "",
+      },
+    });
+
+    products = useResult(result, null, (data) => data?.find.edges);
+
+    onDone((result) => {
+      router.push({ name: "Products" });
+      router.go(0);
+    });
+
+    return {
+      deleteProduct,
+      products,
+      loading: loading || d_loading,
+      error: error || d_error,
+    };
   },
 });
 </script>
